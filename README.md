@@ -59,44 +59,153 @@ codebase-audit/
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start with Claude Code
 
-### 1. Prepare Your Audit
+This framework is designed to work with AI coding assistants. The recommended approach uses **Claude Code** (Anthropic's CLI tool), but it also works with other AI tools.
 
-1. Clone this repository
-2. Create a secure workspace for audit materials
-3. Gather access to all code repositories
-4. Identify stakeholders and timeline
-5. Create a `.audit/` folder in the target project for AI-generated documents
+### Prerequisites
 
-### 2. Run Phases Sequentially
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed (`npm install -g @anthropic-ai/claude-code`)
+- Access to the codebase you want to audit
+- Terminal/command line access
+
+### Step 1: Clone This Framework
+
+Clone this repository to a **separate folder** (not inside your target codebase):
 
 ```bash
-# Start with Phase 0
-1. Open core-phases/phase-00-reconnaissance.md
-2. Provide the requested files to Claude/GPT-4
-3. Run the audit prompt
-4. Save the "Carry-Forward Summary"
-
-# Continue to Phase 1
-5. Open core-phases/phase-01-authentication.md
-6. Paste previous Carry-Forward Summary
-7. Provide authentication code
-8. Run the audit prompt
-9. Document findings
-10. Save new Carry-Forward Summary
-
-# Repeat for Phases 2-11...
-
-# Finish with Phase 12
-11. Compile all findings
-12. Run synthesis prompt
-13. Generate final report
+# Clone the audit framework
+git clone https://github.com/your-username/codebase-audit.git
+cd codebase-audit
 ```
 
-### 3. Track Progress
+### Step 2: Initialize Claude Code
 
-Use `templates/progress-tracker.md` to monitor your audit status.
+Start Claude Code from the framework folder and let it understand the audit methodology:
+
+```bash
+# Start Claude Code
+claude
+
+# Once inside Claude Code, initialize the framework context
+/init
+```
+
+The `/init` command helps Claude understand the complete audit framework, including all phases, templates, and guidelines.
+
+### Step 3: Start Your Audit
+
+Tell Claude the path to your target codebase and ask it to begin the audit:
+
+**Example prompts to start:**
+
+```
+Following this audit framework, please audit my codebase located at "../my-project/"
+```
+
+```
+I want to run a security audit on my application at "C:/Projects/my-app/".
+Please follow the phases in this framework, starting with Phase 0 Reconnaissance.
+```
+
+```
+Audit the codebase at "../my-saas-app/" using this security framework.
+Focus on authentication and API security first.
+```
+
+**For performance audits:**
+
+```
+Run a frontend performance audit on "../my-website/" using the
+specialized/frontend-performance-audit.md guide.
+```
+
+### Step 4: Follow the Phases
+
+Claude will automatically:
+
+1. **Create the `.audit/` folder** in your target project for all findings
+2. **Initialize `audit-context.md`** to track progress and enable resumption
+3. **Run phases sequentially** (0 through 12), building on previous findings
+4. **Document findings** using the templates in this framework
+5. **Ask about `.gitignore`** before adding sensitive audit files
+
+You can guide the process with prompts like:
+
+```
+Continue to the next phase
+```
+
+```
+Focus more on the API endpoints in /src/api/
+```
+
+```
+Skip Phase 7 (Infrastructure) - we don't use Kubernetes
+```
+
+```
+Run the specialized GraphQL audit on our API
+```
+
+### Step 5: Resume an Audit
+
+If you need to stop and resume later, Claude will read the `audit-context.md` file:
+
+```
+Resume the security audit on "../my-project/"
+```
+
+```
+Continue the audit from where we left off
+```
+
+### Step 6: Generate Final Report
+
+After completing all phases:
+
+```
+Generate the final synthesis report for this audit
+```
+
+```
+Create an executive summary of all findings
+```
+
+---
+
+## 🔧 Using with Other AI Tools
+
+### ChatGPT / GPT-4 (Web Interface)
+
+1. Open the phase markdown file (e.g., `core-phases/phase-00-reconnaissance.md`)
+2. Copy the prompt section (between triple backticks)
+3. Paste into ChatGPT along with your code files
+4. Manually save the "Carry-Forward Summary" for the next phase
+5. Repeat for each phase, pasting the previous summary
+
+### Cursor / VS Code AI Extensions
+
+1. Open your target codebase in Cursor
+2. Reference this framework in your prompts:
+   ```
+   Using the audit methodology from @codebase-audit/core-phases/phase-00-reconnaissance.md,
+   analyze this codebase for security vulnerabilities
+   ```
+3. Use `@file` references to include phase prompts
+
+### Aider / Other CLI Tools
+
+1. Start your AI tool in the framework directory
+2. Provide the target codebase path
+3. Reference phase files as context
+
+### Best Practices for All Tools
+
+- **Feed code in logical chunks** - Don't overwhelm the context window
+- **Save carry-forward summaries** - These provide crucial context between sessions
+- **Document as you go** - Don't wait until the end
+- **Verify findings** - AI analysis should be validated by security professionals
 
 ---
 
@@ -132,29 +241,6 @@ For deeper analysis of specific technologies:
 | `graphql-audit.md` | GraphQL APIs |
 | `api-penetration-testing.md` | Active security testing |
 | `frontend-performance-audit.md` | Frontend performance, Core Web Vitals, SEO |
-
----
-
-## 📝 How to Use Prompts
-
-### With Claude (Recommended)
-
-1. Open the phase markdown file
-2. Copy the prompt section (between triple backticks)
-3. Paste into Claude conversation
-4. Provide the requested code files
-5. Review and document findings
-
-### With Other LLMs
-
-The prompts are designed for any capable LLM. Adjust context window usage as needed.
-
-### Best Practices
-
-- **Feed code in logical chunks** - Don't overwhelm the context window
-- **Save carry-forward summaries** - These provide crucial context
-- **Document as you go** - Don't wait until the end
-- **Verify findings** - LLM analysis should be validated
 
 ---
 

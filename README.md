@@ -45,7 +45,8 @@ codebase-audit/
 ├── specialized/                       # Deep-dive audits
 │   ├── kubernetes-audit.md            # K8s-specific checks
 │   ├── graphql-audit.md               # GraphQL API security
-│   └── api-penetration-testing.md     # Active testing guide
+│   ├── api-penetration-testing.md     # Active testing guide
+│   └── frontend-performance-audit.md  # Performance & SEO audit
 ├── templates/                         # Documentation templates
 │   ├── finding-template.md            # Individual finding format
 │   └── progress-tracker.md            # Audit progress tracking
@@ -130,6 +131,7 @@ For deeper analysis of specific technologies:
 | `kubernetes-audit.md` | K8s/container deployments |
 | `graphql-audit.md` | GraphQL APIs |
 | `api-penetration-testing.md` | Active security testing |
+| `frontend-performance-audit.md` | Frontend performance, Core Web Vitals, SEO |
 
 ---
 
@@ -273,8 +275,7 @@ This framework provides guidance for security audits but does not guarantee comp
 
 For questions about using this framework:
 1. Check existing documentation
-2. Open a GitHub issue
-3. Consult security professionals for critical findings
+2. Consult security professionals for critical findings
 
 ---
 

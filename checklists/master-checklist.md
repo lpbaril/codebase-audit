@@ -293,6 +293,37 @@ This is a consolidated checklist covering all audit phases. Use this for quick r
 
 ---
 
+## Specialized: Frontend Performance (Optional)
+
+### Core Web Vitals
+- [ ] LCP (Largest Contentful Paint) < 2.5 seconds
+- [ ] CLS (Cumulative Layout Shift) < 0.1
+- [ ] INP (Interaction to Next Paint) < 200ms
+- [ ] FID (First Input Delay) < 100ms
+- [ ] TTFB (Time to First Byte) < 800ms
+
+### SEO
+- [ ] Meta tags and titles optimized
+- [ ] Open Graph and Twitter Cards configured
+- [ ] Structured data (JSON-LD) implemented
+- [ ] Sitemap and robots.txt present
+- [ ] Mobile-friendly design verified
+
+### Assets
+- [ ] Images optimized (WebP/AVIF, lazy loading)
+- [ ] CSS/JS minified and code-split
+- [ ] Fonts optimized (font-display: swap)
+- [ ] Caching headers configured
+- [ ] Compression (Brotli/Gzip) enabled
+
+### Third-Party Scripts
+- [ ] Third-party scripts inventoried
+- [ ] Scripts loaded async/defer
+- [ ] Performance impact measured
+- [ ] CSP (Content Security Policy) configured
+
+---
+
 ## Air-Gap Compliance Summary
 
 | Requirement | Status |

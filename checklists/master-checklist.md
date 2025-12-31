@@ -324,6 +324,159 @@ This is a consolidated checklist covering all audit phases. Use this for quick r
 
 ---
 
+## Specialized: Mobile Security (Optional)
+
+*Use when auditing iOS, Android, React Native, or Flutter applications*
+
+### Secure Storage
+- [ ] Keychain (iOS) / Keystore (Android) for sensitive data
+- [ ] No secrets in SharedPreferences/UserDefaults
+- [ ] No hardcoded API keys or tokens
+- [ ] Encrypted local database
+
+### Mobile Authentication
+- [ ] Biometric authentication properly implemented
+- [ ] Secure token storage
+- [ ] Session timeout on background
+- [ ] Device binding / attestation
+
+### Network Security
+- [ ] Certificate pinning implemented
+- [ ] HTTPS only (no HTTP)
+- [ ] App Transport Security (iOS) configured
+- [ ] Network Security Config (Android) configured
+
+### Code Protection
+- [ ] Obfuscation enabled (ProGuard/R8)
+- [ ] Root/jailbreak detection
+- [ ] Debugger detection
+- [ ] No sensitive logic in JavaScript (React Native)
+
+### Data Leakage Prevention
+- [ ] No sensitive data in logs
+- [ ] No sensitive data in crash reports
+- [ ] Screenshot protection for sensitive screens
+- [ ] Clipboard protection
+- [ ] Backup exclusion for sensitive data
+
+### Platform-Specific (iOS)
+- [ ] Keychain access groups configured
+- [ ] Data protection classes used
+- [ ] Universal Links validated
+- [ ] URL scheme handling secure
+
+### Platform-Specific (Android)
+- [ ] Exported components secured (android:exported)
+- [ ] Content providers protected
+- [ ] Broadcast receivers secured
+- [ ] WebView security configured
+
+### Third-Party SDKs
+- [ ] SDK permissions reviewed
+- [ ] SDK data collection understood
+- [ ] SDK vulnerabilities checked
+
+---
+
+## Specialized: AWS Security (Optional)
+
+*Use when auditing AWS-deployed applications*
+
+### IAM Security
+- [ ] No root account usage
+- [ ] MFA enabled for all users
+- [ ] Least privilege policies
+- [ ] No wildcard (*) permissions
+- [ ] Service roles scoped appropriately
+- [ ] No hardcoded credentials
+
+### S3 Security
+- [ ] No unintended public buckets
+- [ ] Bucket policies restrictive
+- [ ] Server-side encryption enabled
+- [ ] Versioning enabled for critical buckets
+- [ ] Block public access settings enabled
+
+### VPC & Network
+- [ ] Security groups least privilege
+- [ ] No 0.0.0.0/0 ingress (except LBs)
+- [ ] VPC Flow Logs enabled
+- [ ] Private subnets for databases
+- [ ] Network ACLs configured
+
+### Lambda Security
+- [ ] Minimal IAM permissions
+- [ ] VPC attached if needed
+- [ ] Environment variables encrypted
+- [ ] No secrets in code
+- [ ] Timeout and memory limits set
+
+### RDS/Database Security
+- [ ] Not publicly accessible
+- [ ] Encryption at rest enabled
+- [ ] Encryption in transit (SSL/TLS)
+- [ ] Automated backups enabled
+- [ ] Security groups restrictive
+
+### Secrets Management
+- [ ] Secrets Manager or Parameter Store used
+- [ ] Secrets rotated automatically
+- [ ] KMS encryption for secrets
+
+### Logging & Monitoring
+- [ ] CloudTrail enabled (all regions)
+- [ ] CloudWatch Logs configured
+- [ ] GuardDuty enabled
+- [ ] Config Rules enabled
+- [ ] Alerting configured
+
+### EC2/Compute Security
+- [ ] IMDSv2 required (no IMDSv1)
+- [ ] Latest AMIs used
+- [ ] SSM for access (not SSH keys)
+- [ ] EBS encryption enabled
+
+---
+
+## Compliance Quick Reference (Optional)
+
+*Tag findings with relevant compliance frameworks*
+
+### OWASP Top 10 (2021)
+- [ ] A01: Broken Access Control → Phase 2
+- [ ] A02: Cryptographic Failures → Phase 5
+- [ ] A03: Injection → Phase 3
+- [ ] A04: Insecure Design → Phase 4
+- [ ] A05: Security Misconfiguration → Phase 7
+- [ ] A06: Vulnerable Components → Phase 0
+- [ ] A07: Auth Failures → Phase 1
+- [ ] A08: Software/Data Integrity → Phase 7
+- [ ] A09: Logging Failures → Phase 9
+- [ ] A10: SSRF → Phase 3
+
+### SOC 2 Trust Services
+- [ ] CC6.1: Logical Access → Phases 1, 2
+- [ ] CC6.6: External Threats → Phases 3, 6, 7
+- [ ] CC6.7: Data Transmission → Phases 3, 5
+- [ ] CC7.1: Monitoring → Phase 9
+- [ ] CC7.3: Incident Evaluation → Phase 10
+
+### GDPR Article 32
+- [ ] Encryption (Art. 32.1.a) → Phase 5
+- [ ] Confidentiality (Art. 32.1.b) → Phases 1, 2, 8
+- [ ] Integrity (Art. 32.1.b) → Phases 5, 11
+- [ ] Availability (Art. 32.1.b) → Phases 7, 10
+
+### PCI-DSS v4.0
+- [ ] Req 3: Protect Stored Data → Phase 5
+- [ ] Req 4: Encryption in Transit → Phases 3, 5
+- [ ] Req 6: Secure Development → Phases 3-6
+- [ ] Req 7: Restrict Access → Phase 2
+- [ ] Req 8: Strong Auth → Phase 1
+- [ ] Req 10: Logging → Phase 9
+
+---
+
 ## Air-Gap Compliance Summary
 
 | Requirement | Status |

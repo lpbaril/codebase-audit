@@ -28,6 +28,7 @@ This repository contains a complete security audit framework consisting of **12 
 ```
 codebase-audit/
 ├── README.md                          # This file
+├── audit-selector.md                  # Auto-detect tech stack & recommend audits
 ├── core-phases/                       # Main audit phases (run in order)
 │   ├── phase-00-reconnaissance.md     # Attack surface mapping
 │   ├── phase-01-authentication.md     # Identity verification
@@ -43,12 +44,17 @@ codebase-audit/
 │   ├── phase-11-cross-cutting.md      # Integration review
 │   └── phase-12-synthesis.md          # Final report
 ├── specialized/                       # Deep-dive audits
+│   ├── mobile-security-audit.md       # iOS, Android, React Native, Flutter
+│   ├── aws-security-audit.md          # AWS services security
 │   ├── kubernetes-audit.md            # K8s-specific checks
 │   ├── graphql-audit.md               # GraphQL API security
 │   ├── api-penetration-testing.md     # Active testing guide
 │   └── frontend-performance-audit.md  # Performance & SEO audit
+├── compliance/                        # Compliance framework mappings
+│   └── compliance-mapping.md          # OWASP, SOC2, GDPR, PCI-DSS, HIPAA
 ├── templates/                         # Documentation templates
 │   ├── finding-template.md            # Individual finding format
+│   ├── audit-context-template.md      # AI session memory template
 │   └── progress-tracker.md            # Audit progress tracking
 ├── checklists/                        # Quick-reference checklists
 │   └── master-checklist.md            # Consolidated checklist
@@ -237,10 +243,22 @@ For deeper analysis of specific technologies:
 
 | Audit | Use When |
 |-------|----------|
+| `mobile-security-audit.md` | iOS, Android, React Native, Flutter apps |
+| `aws-security-audit.md` | AWS-deployed applications |
 | `kubernetes-audit.md` | K8s/container deployments |
 | `graphql-audit.md` | GraphQL APIs |
 | `api-penetration-testing.md` | Active security testing |
 | `frontend-performance-audit.md` | Frontend performance, Core Web Vitals, SEO |
+
+### Compliance Mapping
+
+Use `compliance/compliance-mapping.md` to map findings to:
+- **OWASP Top 10 (2021)** - Web application security
+- **SOC 2** - Trust service criteria
+- **GDPR** - EU data protection
+- **PCI-DSS v4.0** - Payment card security
+- **HIPAA** - Healthcare data protection
+- **ISO 27001:2022** - Information security management
 
 ---
 

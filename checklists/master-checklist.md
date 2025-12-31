@@ -10,6 +10,9 @@ This is a consolidated checklist covering all audit phases. Use this for quick r
 - [ ] Access to all code repositories granted
 - [ ] Access to infrastructure configurations granted
 - [ ] Secure workspace for audit established
+- [ ] `.audit/` folder created for AI-generated artifacts
+- [ ] `audit-context.md` initialized (AI session memory)
+- [ ] User decision on `.gitignore` documented (add `.audit/` or not)
 - [ ] Stakeholder contacts identified
 - [ ] Timeline established
 

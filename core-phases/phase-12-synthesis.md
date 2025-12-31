@@ -349,3 +349,15 @@ Use this structure for the final deliverable:
 - [ ] Questions addressed
 - [ ] Follow-up scheduled
 ```
+
+---
+
+## Output Location
+
+Save all Phase 12 deliverables to the `.audit/` folder in the target project:
+
+- `.audit/final-report.md` - Complete security audit report
+- `.audit/executive-summary.md` - Leadership-ready summary
+- `.audit/remediation-roadmap.md` - Prioritized fix list
+
+**Reminder:** Ensure the user has been asked about adding `.audit/` to `.gitignore` before completing the audit. Update `.audit/audit-context.md` to mark Phase 12 as completed.

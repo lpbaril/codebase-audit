@@ -66,6 +66,7 @@ codebase-audit/
 2. Create a secure workspace for audit materials
 3. Gather access to all code repositories
 4. Identify stakeholders and timeline
+5. Create a `.audit/` folder in the target project for AI-generated documents
 
 ### 2. Run Phases Sequentially
 
@@ -152,6 +153,59 @@ The prompts are designed for any capable LLM. Adjust context window usage as nee
 - **Save carry-forward summaries** - These provide crucial context
 - **Document as you go** - Don't wait until the end
 - **Verify findings** - LLM analysis should be validated
+
+---
+
+## 🤖 AI Agent Guidelines
+
+When using AI assistants (Claude, GPT-4, etc.) to conduct audits with this framework:
+
+### Audit Artifact Storage
+
+All AI-generated documents MUST be saved to a `.audit/` folder in the **project being audited**:
+
+```
+target-project/
+├── .audit/                    # AI-generated audit artifacts
+│   ├── audit-context.md       # Session memory (AI resumes from here)
+│   ├── findings/              # Individual finding documents
+│   ├── reports/               # Phase reports and summaries
+│   ├── carry-forward/         # Carry-forward summaries
+│   └── final-report.md        # Synthesized final report
+├── src/
+└── ...
+```
+
+**What goes in `.audit/`:**
+- `audit-context.md` - Session memory for AI to resume audits
+- Finding documents (from `templates/finding-template.md`)
+- Progress tracker instances
+- Carry-forward summaries
+- Phase reports and final synthesis
+
+### Audit Context File (Session Memory)
+
+The AI MUST create and maintain `.audit/audit-context.md` using the template in `templates/audit-context-template.md`. This file enables:
+- **Resuming audits** after breaks or codebase changes
+- **Tracking remediation** status of findings (open/fixed/in-progress)
+- **Preserving context** (carry-forward summaries, notes)
+
+**AI Behavior:**
+1. At audit start: Check if `.audit/audit-context.md` exists
+2. If exists: Read it to understand previous state and resume
+3. If not: Create it using the template
+4. After each phase: Update the context file with current state
+
+### Git Ignore Consent Rule
+
+**CRITICAL:** Before adding `.audit/` to `.gitignore`, the AI MUST:
+
+1. Inform the user that audit artifacts exist in `.audit/`
+2. Explain trade-offs:
+   - **Add to .gitignore:** Keeps sensitive findings out of version control (recommended)
+   - **Do NOT add:** Allows audit history tracking (useful for compliance)
+3. Explicitly ask: *"Would you like me to add `.audit/` to your `.gitignore`?"*
+4. Wait for user confirmation before making changes
 
 ---
 

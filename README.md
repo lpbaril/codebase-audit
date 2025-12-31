@@ -50,6 +50,16 @@ codebase-audit/
 │   ├── graphql-audit.md               # GraphQL API security
 │   ├── api-penetration-testing.md     # Active testing guide
 │   └── frontend-performance-audit.md  # Performance & SEO audit
+├── skill/                             # Claude Code Skill (auto-triggered)
+│   ├── SKILL.md                       # Main skill entry point
+│   ├── phases/                        # Condensed phase instructions
+│   ├── specialized/                   # Condensed specialized audits
+│   ├── templates/                     # Finding & report templates
+│   └── scripts/                       # Utility scripts (Python)
+│       ├── detect_stack.py            # Auto-detect technologies
+│       ├── init_audit.py              # Initialize .audit/ folder
+│       ├── validate_finding.py        # Validate finding format
+│       └── generate_report.py         # Compile final report
 ├── compliance/                        # Compliance framework mappings
 │   └── compliance-mapping.md          # OWASP, SOC2, GDPR, PCI-DSS, HIPAA
 ├── templates/                         # Documentation templates
@@ -62,6 +72,52 @@ codebase-audit/
     └── ISSUE_TEMPLATE/                # GitHub issue templates
         └── security-finding.md        # Finding issue template
 ```
+
+---
+
+## 🎯 Two Ways to Use This Framework
+
+This framework supports **two usage modes** to fit your workflow:
+
+### Option 1: Claude Code Skill (Recommended)
+
+If you use **Claude Code** (Anthropic's CLI), the skill provides **automated orchestration**:
+
+**Installation:**
+```bash
+# Copy the skill to your Claude Code skills directory
+cp -r skill ~/.claude/skills/security-audit
+
+# Or for project-specific use:
+cp -r skill .claude/skills/security-audit
+```
+
+**Usage:**
+```
+# Just ask Claude to audit your codebase:
+"Run a security audit on this codebase"
+"Check this app for vulnerabilities"
+"Perform a security review"
+```
+
+**What happens automatically:**
+1. Claude detects your technology stack (frameworks, cloud, infrastructure)
+2. Recommends appropriate audit phases and specialized audits
+3. Creates `.audit/` folder for findings and reports
+4. Runs phases sequentially with context preservation
+5. Generates final report with prioritized remediation
+
+### Option 2: Standalone Markdown (Any AI Tool)
+
+Works with **ChatGPT, Cursor, Aider, Windsurf**, or any AI assistant:
+
+1. Start with `audit-selector.md` to determine your audit path
+2. Run phases sequentially from `core-phases/`
+3. Save carry-forward summaries between sessions
+4. Use `templates/` for consistent documentation
+5. Reference `compliance/` for regulatory mapping
+
+See detailed workflow below.
 
 ---
 

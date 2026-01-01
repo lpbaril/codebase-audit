@@ -1,9 +1,11 @@
 # Phase 8: Secrets Management Security Audit
 
 ## Overview
-**Purpose:** Comprehensive review of how secrets are handled throughout the system  
-**Estimated Time:** 2-4 hours  
+**Purpose:** Comprehensive review of how secrets are handled throughout the system
+**Estimated Time:** 2-4 hours
 **Prerequisites:** Phases 0-7 completed
+
+> **Automated Secret Scanning:** Before manual review, run automated secret detection tools (TruffleHog, Gitleaks, git-secrets, detect-secrets). See [`specialized/vibe-coding-audit.md`](../specialized/vibe-coding-audit.md) for tool setup and usage instructions.
 
 ## Files to Provide
 

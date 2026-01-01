@@ -438,6 +438,56 @@ This is a consolidated checklist covering all audit phases. Use this for quick r
 
 ---
 
+## Specialized: Vibe Coding / AI-Generated Code (Optional)
+
+*Use when auditing applications built with AI assistance (ChatGPT, Claude, Copilot, Cursor) or by developers without security expertise*
+
+### Automated Secret Scanning (Run First!)
+- [ ] TruffleHog or Gitleaks scan completed
+- [ ] Git history scanned for secrets (even removed ones)
+- [ ] No API keys in source code
+- [ ] No passwords or tokens hardcoded
+- [ ] `.env` files in `.gitignore`
+- [ ] No `.env` files in git history
+
+### Debug & Development Code
+- [ ] No `console.log` with sensitive data
+- [ ] No `TODO: add auth` comments
+- [ ] No commented-out security checks
+- [ ] Debug mode disabled in production
+- [ ] No test/demo credentials in code
+- [ ] No admin backdoors
+
+### Common AI Code Mistakes
+- [ ] Password hashing uses bcrypt/argon2 (not MD5/SHA1)
+- [ ] JWT secrets are strong (not "secret" or tutorial defaults)
+- [ ] JWT tokens have expiration
+- [ ] No SQL string concatenation with user input
+- [ ] No `dangerouslySetInnerHTML` with user content (React)
+- [ ] No `v-html` with user content (Vue)
+- [ ] No `eval()` with user input
+
+### Security Headers & Configuration
+- [ ] CORS not set to wildcard `*`
+- [ ] Cookies have `HttpOnly`, `Secure`, `SameSite` flags
+- [ ] Security headers present (helmet or manual)
+- [ ] No source maps in production
+- [ ] Stack traces hidden from users
+
+### Dependencies
+- [ ] `npm audit` / `pip-audit` run
+- [ ] No critical vulnerabilities
+- [ ] Lock file committed
+- [ ] No typosquatting packages
+
+### Pre-Commit Hooks
+- [ ] Secret scanning hook installed
+- [ ] Hook blocks commits with secrets
+
+*Full checklist: See [`specialized/vibe-coding-audit.md`](../specialized/vibe-coding-audit.md)*
+
+---
+
 ## Compliance Quick Reference (Optional)
 
 *Tag findings with relevant compliance frameworks*

@@ -107,11 +107,20 @@ If you use **Claude Code** (Anthropic's CLI), the skill provides **automated orc
 
 **Installation:**
 ```bash
-# Copy the skill to your Claude Code skills directory
+# Option 1: Copy (simple, but requires manual updates)
 cp -r skill ~/.claude/skills/security-audit
 
-# Or for project-specific use:
-cp -r skill .claude/skills/security-audit
+# Option 2: Symlink (recommended - auto-updates when you git pull)
+ln -s /path/to/codebase-audit/skill ~/.claude/skills/security-audit
+```
+
+**Updating:**
+```bash
+# If you used symlink: just pull the latest
+git pull
+
+# If you used copy: re-copy the skill folder
+cp -r skill ~/.claude/skills/security-audit
 ```
 
 **Usage:**

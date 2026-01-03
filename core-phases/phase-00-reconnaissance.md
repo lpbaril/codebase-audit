@@ -1,9 +1,9 @@
-# Phase 0: Codebase Reconnaissance & Attack Surface Mapping
+# Phase 0: Codebase Reconnaissance, Threat Modeling & Attack Surface Mapping
 
 ## Overview
-**Purpose:** Establish baseline understanding before diving into code  
-**Duration:** 30-60 minutes  
-**Output:** Architecture map, attack surface inventory, initial red flags
+**Purpose:** Establish baseline understanding, identify threats, and map attack surface before diving into code
+**Duration:** 60-90 minutes
+**Output:** Architecture map, threat model, attack surface inventory, initial red flags
 
 ## Files to Provide
 - README, ARCHITECTURE.md, or any design docs
@@ -57,7 +57,66 @@ Identify:
 - All exit points (responses, exports, logs, notifications)
 - Shared resources (databases, caches, queues)
 
-### 2. Attack Surface Inventory
+### 2. Threat Modeling (STRIDE Analysis)
+
+Before diving into code, identify potential threats at the architectural level:
+
+**STRIDE Threat Categories:**
+
+| Category | Question to Ask | Example Threats |
+|----------|-----------------|-----------------|
+| **S**poofing | Can an attacker impersonate a user or system? | Session hijacking, credential theft, token forgery |
+| **T**ampering | Can data be modified in transit or at rest? | Man-in-the-middle, SQL injection, file manipulation |
+| **R**epudiation | Can actions be denied or untracked? | Missing audit logs, unsigned transactions |
+| **I**nformation Disclosure | Can sensitive data be exposed? | Verbose errors, unencrypted storage, insecure APIs |
+| **D**enial of Service | Can the system be made unavailable? | Resource exhaustion, infinite loops, missing rate limits |
+| **E**levation of Privilege | Can an attacker gain higher access? | Broken access control, insecure direct object references |
+
+**Threat Model Template:**
+
+For each major component identified in Architecture Mapping:
+
+```markdown
+## Component: [Name]
+
+### Trust Boundaries Crossed
+- [ ] External → Internal (user input)
+- [ ] Internal → Database
+- [ ] Service → Service
+- [ ] Admin → User zone
+
+### Assets at Risk
+| Asset | Confidentiality | Integrity | Availability |
+|-------|----------------|-----------|--------------|
+| User credentials | Critical | Critical | Medium |
+| Business data | High | High | High |
+| Session tokens | Critical | Critical | Medium |
+
+### STRIDE Threats
+| Threat | Applicable? | Notes | Priority |
+|--------|-------------|-------|----------|
+| Spoofing | Yes/No | | High/Med/Low |
+| Tampering | Yes/No | | |
+| Repudiation | Yes/No | | |
+| Info Disclosure | Yes/No | | |
+| DoS | Yes/No | | |
+| Elevation | Yes/No | | |
+
+### Mitigations to Verify
+- [ ] [Control that should exist]
+- [ ] [Control that should exist]
+```
+
+**High-Value Target Identification:**
+
+Based on the threat model, identify:
+1. **Crown Jewels** - Most valuable data/functionality
+2. **Attack Paths** - Likely routes to crown jewels
+3. **Weak Points** - Areas likely to have vulnerabilities
+
+---
+
+### 3. Attack Surface Inventory
 
 Create comprehensive entry point analysis:
 
@@ -74,7 +133,7 @@ Categorize by:
 - **Internal endpoints** (service-to-service)
 - **Scheduled/Background** (cron jobs, workers)
 
-### 3. Dependency Risk Assessment
+### 4. Dependency Risk Assessment
 
 **Direct Dependencies Analysis:**
 | Package | Version | Purpose | Last Updated | Known CVEs | Risk Level |
@@ -93,7 +152,7 @@ Flag any dependencies that:
 - [ ] Load resources from CDNs
 - [ ] Have auto-update mechanisms
 
-### 4. Technology Stack Assessment
+### 5. Technology Stack Assessment
 
 | Layer | Technology | Version | Security Considerations |
 |-------|------------|---------|------------------------|
@@ -106,7 +165,7 @@ Flag any dependencies that:
 | Container | | | |
 | Orchestration | | | |
 
-### 5. Air-Gap Violation Scan
+### 6. Air-Gap Violation Scan
 
 Search for patterns that violate air-gap requirements:
 
@@ -125,7 +184,7 @@ Search for patterns that violate air-gap requirements:
 - Third-party integrations
 - External logging services
 
-### 6. Initial Red Flags
+### 7. Initial Red Flags
 
 Document immediate security concerns:
 
@@ -141,7 +200,7 @@ Document immediate security concerns:
 **TODO/FIXME Security Items:**
 Search for comments containing: TODO, FIXME, HACK, XXX, SECURITY, VULNERABLE, UNSAFE
 
-### 7. Access Level Mapping
+### 8. Access Level Mapping
 
 Document the access control structure:
 
@@ -154,7 +213,7 @@ Document the access control structure:
 | Guest | | | |
 | Service Account | | | |
 
-### 8. Sensitive Data Inventory
+### 9. Sensitive Data Inventory
 
 | Data Type | Classification | Storage Location | Encryption Status | Access Control |
 |-----------|---------------|------------------|-------------------|----------------|
@@ -200,6 +259,11 @@ Document the access control structure:
 - Critical components: [...]
 - User roles identified: [...]
 
+## Threat Model Summary
+- Crown Jewels: [Most valuable assets]
+- Primary Attack Vectors: [Top 3 likely attack paths]
+- Highest Risk Components: [Components requiring deepest review]
+
 ## Attack Surface Summary
 - Total API endpoints: X
 - Public endpoints: X
@@ -224,6 +288,8 @@ Document the access control structure:
 ## Checklist Before Moving to Phase 1
 
 - [ ] Architecture diagram created
+- [ ] Threat model completed (STRIDE analysis)
+- [ ] High-value targets identified
 - [ ] All entry points documented
 - [ ] Dependency audit complete
 - [ ] Air-gap violations identified

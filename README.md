@@ -1,4 +1,8 @@
-# 🔒 Codebase Security Audit Framework
+# Codebase Security Audit Framework
+
+![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Tests](https://img.shields.io/badge/tests-122%20passing-brightgreen.svg)
 
 A comprehensive, structured security audit methodology for full-stack applications, specifically designed for:
 - **Air-gapped environments**
@@ -10,16 +14,28 @@ A comprehensive, structured security audit methodology for full-stack applicatio
 
 ## 📋 Overview
 
-This repository contains a complete security audit framework consisting of **12 sequential phases** that systematically examine every aspect of your application's security posture.
+This repository contains a complete security audit framework consisting of **13 sequential phases** that systematically examine every aspect of your application's security posture, from initial reconnaissance through remediation verification.
 
 ### Key Features
 
-- ✅ **Sequential methodology** - Each phase builds on previous findings
-- ✅ **LLM-optimized prompts** - Designed for use with Claude, GPT-4, or similar
-- ✅ **Air-gap focused** - Special attention to offline/isolated environments
-- ✅ **Comprehensive coverage** - Auth, APIs, infrastructure, secrets, and more
-- ✅ **Actionable output** - Prioritized remediation roadmaps
-- ✅ **Carry-forward system** - Context preserved across phases
+- **Sequential methodology** - Each phase builds on previous findings
+- **LLM-optimized prompts** - Designed for use with Claude, GPT-4, or similar
+- **Air-gap focused** - Special attention to offline/isolated environments
+- **Comprehensive coverage** - Auth, APIs, infrastructure, secrets, and more
+- **Actionable output** - Prioritized remediation roadmaps
+- **Carry-forward system** - Context preserved across phases
+- **Multiple export formats** - Markdown, JSON, and CSV reports
+
+### What's New in v1.1
+
+- **Phase 13: Remediation Verification** - Verify fixes, test bypasses, detect regressions
+- **Threat Modeling (STRIDE)** - Integrated into Phase 0 for upfront risk identification
+- **Rules of Engagement Template** - Professional pre-engagement documentation
+- **JSON/CSV Export** - Enterprise-friendly report formats
+- **122 Unit Tests** - Comprehensive test coverage for scripts
+- **CI/CD Workflows** - Automated testing and security scanning
+
+See [CHANGELOG.md](CHANGELOG.md) for full details.
 
 ---
 
@@ -42,7 +58,8 @@ codebase-audit/
 │   ├── phase-09-logging-monitoring.md # Audit trails
 │   ├── phase-10-error-handling.md     # Failure modes
 │   ├── phase-11-cross-cutting.md      # Integration review
-│   └── phase-12-synthesis.md          # Final report
+│   ├── phase-12-synthesis.md          # Final report
+│   └── phase-13-verification.md       # Remediation verification
 ├── specialized/                       # Deep-dive audits
 │   ├── mobile-security-audit.md       # iOS, Android, React Native, Flutter
 │   ├── aws-security-audit.md          # AWS services security
@@ -65,7 +82,12 @@ codebase-audit/
 ├── templates/                         # Documentation templates
 │   ├── finding-template.md            # Individual finding format
 │   ├── audit-context-template.md      # AI session memory template
-│   └── progress-tracker.md            # Audit progress tracking
+│   ├── progress-tracker.md            # Audit progress tracking
+│   └── rules-of-engagement.md         # Pre-engagement questionnaire
+├── tests/                             # Unit tests (pytest)
+│   ├── test_detect_stack.py           # Stack detection tests
+│   ├── test_validate_finding.py       # Finding validation tests
+│   └── test_generate_report.py        # Report generation tests
 ├── checklists/                        # Quick-reference checklists
 │   └── master-checklist.md            # Consolidated checklist
 └── .github/

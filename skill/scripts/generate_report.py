@@ -6,12 +6,27 @@ Compiles all audit findings into a final report with executive summary,
 prioritized remediation roadmap, and compliance mapping.
 
 Usage:
+    python generate_report.py /path/to/.audit [options]
+
+Options:
+    --format FORMAT    Output format: markdown (default), json, csv, all
+    --output FILE      Output file path (default: auto-generated in .audit dir)
+    --stdout           Print to stdout instead of file
+    --summary-only     Generate executive summary only (faster)
+
+Examples:
     python generate_report.py /path/to/.audit
+    python generate_report.py /path/to/.audit --format json
+    python generate_report.py /path/to/.audit --format csv --output findings.csv
+    python generate_report.py /path/to/.audit --format all
 
 Output:
-    Writes final-report.md to the .audit directory
+    Writes report files to the .audit directory
 """
 
+import argparse
+import csv
+import io
 import json
 import os
 import re
@@ -19,6 +34,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 from collections import defaultdict
+from typing import Optional
 
 
 SEVERITY_ORDER = {
@@ -338,7 +354,7 @@ def generate_compliance_summary(findings: list) -> str:
 
 
 def generate_report(audit_dir: Path) -> str:
-    """Generate the complete final report."""
+    """Generate the complete final report in markdown format."""
     context = load_audit_context(audit_dir)
     findings = load_findings(audit_dir)
 
@@ -383,29 +399,212 @@ def generate_report(audit_dir: Path) -> str:
     return report
 
 
-def main():
-    if len(sys.argv) < 2:
-        print("Usage: python generate_report.py /path/to/.audit", file=sys.stderr)
-        sys.exit(1)
+def generate_json_report(audit_dir: Path) -> str:
+    """Generate the report in JSON format for programmatic consumption."""
+    context = load_audit_context(audit_dir)
+    findings = load_findings(audit_dir)
+    by_severity = count_by_severity(findings)
+    by_phase = count_by_phase(findings)
+    by_status = count_by_status(findings)
 
-    audit_dir = Path(sys.argv[1]).resolve()
+    critical_count = by_severity.get("critical", 0)
+    high_count = by_severity.get("high", 0)
+
+    risk_level = "Low"
+    if critical_count > 0:
+        risk_level = "Critical"
+    elif high_count > 2:
+        risk_level = "High"
+    elif high_count > 0:
+        risk_level = "Medium"
+
+    report_data = {
+        "metadata": {
+            "project_name": context.get("project_name", "Unknown Project"),
+            "audit_started": context.get("audit_started", ""),
+            "audit_status": context.get("audit_status", ""),
+            "generated_at": datetime.now().isoformat(),
+            "framework": "Codebase Security Audit Framework",
+            "framework_version": "1.0"
+        },
+        "summary": {
+            "total_findings": len(findings),
+            "risk_level": risk_level,
+            "by_severity": {
+                "critical": by_severity.get("critical", 0),
+                "high": by_severity.get("high", 0),
+                "medium": by_severity.get("medium", 0),
+                "low": by_severity.get("low", 0),
+                "informational": by_severity.get("info", 0) + by_severity.get("informational", 0)
+            },
+            "by_status": {
+                "open": by_status.get("open", 0),
+                "in_progress": by_status.get("in progress", 0) + by_status.get("in-progress", 0),
+                "resolved": by_status.get("resolved", 0) + by_status.get("fixed", 0),
+                "accepted_risk": by_status.get("accepted risk", 0) + by_status.get("accepted-risk", 0)
+            },
+            "by_phase": dict(by_phase)
+        },
+        "findings": findings,
+        "remediation": {
+            "immediate": [f for f in findings if f["severity"] == "critical" and f["status"] == "open"],
+            "short_term": [f for f in findings if f["severity"] == "high" and f["status"] == "open"],
+            "medium_term": [f for f in findings if f["severity"] == "medium" and f["status"] == "open"],
+            "backlog": [f for f in findings if f["severity"] in ["low", "info", "informational"] and f["status"] == "open"]
+        },
+        "compliance": {
+            "owasp": _group_by_field(findings, "owasp"),
+            "cwe": _group_by_field(findings, "cwe")
+        }
+    }
+
+    return json.dumps(report_data, indent=2, ensure_ascii=False)
+
+
+def _group_by_field(findings: list, field: str) -> dict:
+    """Group finding IDs by a specific field value."""
+    grouped = defaultdict(list)
+    for f in findings:
+        if f.get(field):
+            grouped[f[field]].append(f["id"])
+    return dict(grouped)
+
+
+def generate_csv_report(audit_dir: Path) -> str:
+    """Generate the report in CSV format for spreadsheet import."""
+    findings = load_findings(audit_dir)
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+
+    # Header row
+    writer.writerow([
+        "ID",
+        "Title",
+        "Severity",
+        "Phase",
+        "Status",
+        "OWASP",
+        "CWE",
+        "Description",
+        "Impact",
+        "Recommendation",
+        "File"
+    ])
+
+    # Data rows
+    for f in findings:
+        writer.writerow([
+            f.get("id", ""),
+            f.get("title", ""),
+            f.get("severity", ""),
+            f.get("phase", ""),
+            f.get("status", ""),
+            f.get("owasp", ""),
+            f.get("cwe", ""),
+            f.get("description", "")[:500],  # Truncate long descriptions
+            f.get("impact", ""),
+            f.get("recommendation", ""),
+            f.get("file", "")
+        ])
+
+    return output.getvalue()
+
+
+def generate_summary_only(audit_dir: Path) -> str:
+    """Generate only the executive summary for quick review."""
+    context = load_audit_context(audit_dir)
+    findings = load_findings(audit_dir)
+    return generate_executive_summary(findings, context)
+
+
+def parse_args() -> argparse.Namespace:
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Generate security audit report from findings.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  %(prog)s /path/to/.audit                    Generate markdown report
+  %(prog)s /path/to/.audit --format json      Generate JSON report
+  %(prog)s /path/to/.audit --format csv       Generate CSV report
+  %(prog)s /path/to/.audit --format all       Generate all formats
+  %(prog)s /path/to/.audit --stdout           Print to stdout only
+  %(prog)s /path/to/.audit --summary-only     Generate summary only
+        """
+    )
+
+    parser.add_argument(
+        "audit_dir",
+        type=Path,
+        help="Path to the .audit directory containing findings"
+    )
+
+    parser.add_argument(
+        "--format", "-f",
+        choices=["markdown", "json", "csv", "all"],
+        default="markdown",
+        help="Output format (default: markdown)"
+    )
+
+    parser.add_argument(
+        "--output", "-o",
+        type=Path,
+        help="Output file path (default: auto-generated in .audit dir)"
+    )
+
+    parser.add_argument(
+        "--stdout",
+        action="store_true",
+        help="Print to stdout instead of writing to file"
+    )
+
+    parser.add_argument(
+        "--summary-only",
+        action="store_true",
+        help="Generate executive summary only"
+    )
+
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+    audit_dir = args.audit_dir.resolve()
 
     if not audit_dir.exists():
         print(f"Error: Audit directory does not exist: {audit_dir}", file=sys.stderr)
         sys.exit(1)
 
-    # Generate report
-    report = generate_report(audit_dir)
+    outputs = []
 
-    # Write to file
-    report_path = audit_dir / "final-report.md"
-    report_path.write_text(report, encoding='utf-8')
+    if args.summary_only:
+        content = generate_summary_only(audit_dir)
+        outputs.append(("summary.md", content))
+    elif args.format == "all":
+        outputs.append(("final-report.md", generate_report(audit_dir)))
+        outputs.append(("final-report.json", generate_json_report(audit_dir)))
+        outputs.append(("findings.csv", generate_csv_report(audit_dir)))
+    elif args.format == "json":
+        outputs.append(("final-report.json", generate_json_report(audit_dir)))
+    elif args.format == "csv":
+        outputs.append(("findings.csv", generate_csv_report(audit_dir)))
+    else:  # markdown
+        outputs.append(("final-report.md", generate_report(audit_dir)))
 
-    print(f"Report generated: {report_path}")
+    for filename, content in outputs:
+        if args.stdout:
+            print(content)
+            if len(outputs) > 1:
+                print("\n" + "=" * 60 + "\n")
+        else:
+            if args.output and len(outputs) == 1:
+                output_path = args.output
+            else:
+                output_path = audit_dir / filename
 
-    # Also output to stdout
-    print("\n" + "="*60)
-    print(report)
+            output_path.write_text(content, encoding='utf-8')
+            print(f"Generated: {output_path}")
 
 
 if __name__ == "__main__":
